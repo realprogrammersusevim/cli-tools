@@ -1,12 +1,17 @@
 #!python3
-import click
+import argparse
 
 
-@click.command()
-@click.option("-d", "--dna", prompt="DNA sequence", help="The DNA sequence.")
-@click.option("--amino", "-a", is_flag=True, help="Your amino acid sequence")
-def main(dna, amino):
+def main():
     """DNA to RNA or Amino Acid sequence"""
+    parser = argparse.ArgumentParser(description="DNA to RNA or Amino Acid sequence")
+    parser.add_argument("-d", "--dna", help="The DNA sequence.")
+    parser.add_argument("--amino", "-a", action="store_true", help="Print amino acid sequence instead of RNA.")
+    args = parser.parse_args()
+
+    dna = args.dna
+    amino = args.amino
+
     rna = ""
 
     for char in dna:
