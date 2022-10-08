@@ -9,8 +9,8 @@ The little scripts I've made to make my life just a little bit easier when I'm l
 
 ## Requirements
 
-Bash and/or Zsh
-Python 3.10
+- Bash and/or Zsh
+- Python 3.10
 
 ## Usage
 
