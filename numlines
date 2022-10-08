@@ -1,0 +1,29 @@
+#!python3
+import click
+import os
+
+
+@click.command()
+@click.argument("directory", default=".", type=click.Path(exists=True))
+def numlines(directory):
+    """Get the most lines in a file in a directory."""
+    max_lines = 0
+    max_file = ""
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            file_path = os.path.join(root, file)
+            # print(file_path)
+            try:
+                with open(file_path) as f:
+                    lines = f.read().count("\n")
+                if lines > max_lines:
+                    max_lines = lines
+                    max_file = file_path
+            except:
+                # print(f"Error reading file: {file_path}")
+                pass
+    print(f"{max_file} has the high score with {max_lines} lines.")
+
+
+if __name__ == "__main__":
+    numlines()

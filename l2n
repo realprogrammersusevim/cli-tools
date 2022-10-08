@@ -1,0 +1,65 @@
+#!python3
+import argparse
+import re
+
+numerals = {
+    "a": "i",
+    "b": "ii",
+    "c": "iii",
+    "d": "iv",
+    "e": "v",
+    "f": "vi",
+    "g": "vii",
+    "h": "viii",
+    "i": "ix",
+    "j": "x",
+    "k": "xi",
+    "l": "xii",
+    "m": "xiii",
+    "n": "xiv",
+    "o": "xv",
+    "p": "xvi",
+    "q": "xvii",
+    "r": "xviii",
+    "s": "xix",
+    "t": "xx",
+    "u": "xxi",
+    "v": "xxii",
+    "w": "xxiii",
+    "x": "xxiv",
+    "y": "xxv",
+    "z": "xxvi",
+}
+
+
+def main():
+    # Parse arguments
+    parser = argparse.ArgumentParser(
+        description="Converts letter bullet points to numerals"
+    )
+    parser.add_argument("file", help="Input file")
+    args = parser.parse_args()
+    input = args.file
+
+    # Read file
+    with open(input, "r") as f:
+        source = f.readlines()
+
+    regex = re.compile("^([a-z])[\\.][\\s]")
+
+    # Replace letters with numerals
+    new_source = []
+    for line in source:
+        if regex.match(line):
+            line = line.replace(
+                regex.match(line).group(1), numerals[regex.match(line).group(1)], 1
+            )
+        new_source.append(line)
+
+    # Write to file
+    with open(input, "w") as f:
+        f.writelines(new_source)
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,95 @@
+#!python3
+import click
+
+
+@click.command()
+@click.option("-d", "--dna", prompt="DNA sequence", help="The DNA sequence.")
+@click.option("--amino", "-a", is_flag=True, help="Your amino acid sequence")
+def main(dna, amino):
+    """DNA to RNA or Amino Acid sequence"""
+    rna = ""
+
+    for char in dna:
+        if char.lower() == "c":
+            rna += "G"
+        elif char.lower() == "g":
+            rna += "C"
+        elif char.lower() == "t":
+            rna += "A"
+        elif char.lower() == "a":
+            rna += "U"
+        else:
+            rna += "?"
+
+    if not amino:
+        print(rna)
+
+    if amino:
+        # Get the chars from the RNA string between the start and stop codons
+        rna_to_decode = rna[3:-3]
+        amino_string = ""
+        end = False
+
+        for i in range(0, len(rna_to_decode), 3):
+            codon = rna_to_decode[i : i + 3]
+
+            if codon == "UAA" or codon == "UAG" or codon == "UGA":
+                amino_string += "STOP"
+                break
+            elif codon == "AUG":
+                amino_string += "Met"
+            elif codon == "UUU" or codon == "UUC":
+                amino_string += "Phe"
+            elif codon == "UUA" or codon == "UUG":
+                amino_string += "Leu"
+            elif codon == "UCU" or codon == "UCC" or codon == "UCA" or codon == "UCG":
+                amino_string += "Ser"
+            elif codon == "UAU" or codon == "UAC":
+                amino_string += "Tyr"
+            elif codon == "UGU" or codon == "UGC":
+                amino_string += "Cys"
+            elif codon == "UGG":
+                amino_string += "Trp"
+            elif codon == "CUU" or codon == "CUC" or codon == "CUA" or codon == "CUG":
+                amino_string += "Leu"
+            elif codon == "CCU" or codon == "CCC" or codon == "CCA" or codon == "CCG":
+                amino_string += "Pro"
+            elif codon == "CAU" or codon == "CAC":
+                amino_string += "His"
+            elif codon == "CAA" or codon == "CAG":
+                amino_string += "Gln"
+            elif codon == "CGU" or codon == "CGC" or codon == "CGA" or codon == "CGG":
+                amino_string += "Arg"
+            elif codon == "AUU" or codon == "AUC" or codon == "AUA":
+                amino_string += "Ile"
+            elif codon == "ACU" or codon == "ACC" or codon == "ACA" or codon == "ACG":
+                amino_string += "Thr"
+            elif codon == "AAU" or codon == "AAC":
+                amino_string += "Asn"
+            elif codon == "AAA" or codon == "AAG":
+                amino_string += "Lys"
+            elif codon == "AGU" or codon == "AGC":
+                amino_string += "Ser"
+            elif codon == "AGA" or codon == "AGG":
+                amino_string += "Arg"
+            elif codon == "GUU" or codon == "GUC" or codon == "GUA" or codon == "GUG":
+                amino_string += "Val"
+            elif codon == "GCU" or codon == "GCC" or codon == "GCA" or codon == "GCG":
+                amino_string += "Ala"
+            elif codon == "GAU" or codon == "GAC":
+                amino_string += "Asp"
+            elif codon == "GAA" or codon == "GAG":
+                amino_string += "Glu"
+            elif codon == "GGU" or codon == "GGC" or codon == "GGA" or codon == "GGG":
+                amino_string += "Gly"
+            else:
+                end = True
+
+            if not end:
+                amino_string += "-"
+
+        print(amino_string)
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,34 @@
+#!python3
+import unicodedata
+import click
+
+
+@click.command()
+@click.argument("filename", type=click.File("r"))
+@click.option("-i", "--ignore", is_flag=True, help="Ignore characters")
+def main(filename, ignore):
+    # Convert every character in file to ASCII
+    new_file = ""
+    with open(filename.name, "r") as f:
+        for line in f:
+            for char in line:
+                if ignore:
+                    new_file += (
+                        unicodedata.normalize("NFKD", char)
+                        .encode("ascii", "replace")
+                        .decode()
+                    )
+                else:
+                    new_file += (
+                        unicodedata.normalize("NFKD", char)
+                        .encode("ascii", "ignore")
+                        .decode("ascii")
+                    )
+
+    # Write new file
+    with open(filename.name, "w") as f:
+        f.write(new_file)
+
+
+if __name__ == "__main__":
+    main()
