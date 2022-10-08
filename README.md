@@ -14,6 +14,14 @@ Python 3.10
 
 ## Usage
 
+Add the directory to your path in your shell config file.
+
+```bash
+export PATH=$PATH:"/path/to/the/script/dir/"
+```
+
+If you help with a tool just run it with a `-h` flag
+
 There are eight scripts so far.
 - `ascii` is a Python script to convert a unicode text file to plain ASCII. Especially useful for those annoying little unicode quotation marks that look just like ASCII but cause all sorts of problems.
 - `blocksite` adds a URL to the /etc/hosts file to stop those time sucking websites (only works on Mac and Linux)
