@@ -1,13 +1,20 @@
 #!python3
 import unicodedata
 import click
+import argparse
 
 
-@click.command()
-@click.argument("filename", type=click.File("r"))
-@click.option("-i", "--ignore", is_flag=True, help="Ignore characters")
-def main(filename, ignore):
+def main():
     # Convert every character in file to ASCII
+    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description="Converts a file to ASCII")
+    parser.add_argument("filename", type=argparse.FileType("r"))
+    parser.add_argument("-i", "--ignore", action="store_true", help="Ignore characters")
+
+    args = parser.parse_args()
+    filename = args.filename
+    ignore = args.ignore
+
     new_file = ""
     with open(filename.name, "r") as f:
         for line in f:
