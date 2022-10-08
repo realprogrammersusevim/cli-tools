@@ -10,7 +10,7 @@ The little scripts I've made to make my life just a little bit easier when I'm l
 ## Requirements
 
 - Bash and/or Zsh
-- Python 3.10
+- Python 3
 
 ## Usage
 
@@ -28,6 +28,6 @@ There are eight scripts so far.
 - `dna` is a bit of code I wrote for my biology class to translate a DNA string into the corresponding RNA and amino acids
 - `grading` was one of my very first CLI scripts to convert a percentage grade into a letter grade
 - `l2n` converts a markdown letter list into a numeral list
-- `numlines` counts the lines in every file in the directory
+- `numlines` finds the biggest file in a directory
 - `password` generates a random password
 - And finally, `rename` renames a directory of files in sequential order
