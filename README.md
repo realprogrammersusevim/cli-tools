@@ -30,4 +30,5 @@ There are eight scripts so far.
 - `l2n` converts a markdown letter list into a numeral list
 - `numlines` finds the biggest file in a directory
 - `password` generates a random password
-- And finally, `rename` renames a directory of files in sequential order
+- `rename` renames a directory of files in sequential order
+- `sinceblock` gets the number of minutes since the last Bitcoin block (must be run from a Bitcoin node)

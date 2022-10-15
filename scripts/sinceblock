@@ -1,0 +1,7 @@
+#!/bin/bash
+
+current_unix=$(date +%s)
+bitcoin_block_info=$(bitcoin-cli getblock $(bitcoin-cli getbestblockhash))
+bitcoin_block_time=$(echo $bitcoin_block_info | grep "\"time\":" | grep -o "[[:digit:]]\+")
+second_difference=$(($current_unix - $bitcoin_block_time))
+echo "$(($second_difference / 60)) minutes since last block"
