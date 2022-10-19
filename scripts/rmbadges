@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [ $1 == "-t" ]
+then
+  defaults write com.apple.systempreferences AttentionPrefBundleIDs 0
+  killall Dock
+  echo "Dock notification badges turned off"
+elif [ $1 == "-f" ]
+then
+  defaults write com.apple.systempreferences AttentionPrefBundleIDs 1
+  killall Dock
+  echo "Dock notification badges turned on (restart apps for current notifications to be shown)"
+elif [ $1 == "-h" ] || [ $1 == "--help" ]
+then
+  echo "rmbadges [flag]"
+  echo "    -t: Turn off all dock notification badges"
+  echo "    -f: Turn on all dock notification badges"
+else
+  echo "Invalid flag. Use -h or --help for help."
+fi
