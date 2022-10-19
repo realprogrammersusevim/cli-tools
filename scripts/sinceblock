@@ -1,7 +1,15 @@
 #!/bin/bash
 
-current_unix=$(date +%s)
-bitcoin_block_info=$(bitcoin-cli getblock $(bitcoin-cli getbestblockhash))
-bitcoin_block_time=$(echo $bitcoin_block_info | grep "\"time\":" | grep -o "[[:digit:]]\+")
-second_difference=$(($current_unix - $bitcoin_block_time))
-echo "$(($second_difference / 60)) minutes since last block"
+if [ $1 == "-h" ] || [ $1 == "--help" ]
+then
+    echo "Usage: sinceblock"
+    echo ""
+    echo "Prints the number of minutes since the last block Bitcoin block was found."
+    echo "Note: This script requires the Bitcoin Core daemon to be running on the local computer."
+else
+    current_unix=$(date +%s)
+    bitcoin_block_info=$(bitcoin-cli getblock $(bitcoin-cli getbestblockhash))
+    bitcoin_block_time=$(echo $bitcoin_block_info | grep "\"time\":" | grep -o "[[:digit:]]\+")
+    second_difference=$(($current_unix - $bitcoin_block_time))
+    echo "$(($second_difference / 60)) minutes since last block"
+fi
