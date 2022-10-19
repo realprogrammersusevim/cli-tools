@@ -1,6 +1,7 @@
 #!python3
-import click
 import logging
+
+import click
 
 logging.basicConfig(level=logging.INFO)
 logging.debug("Imports finished, about to define the command options with click.")

@@ -1,6 +1,7 @@
 #!python3
-import click
 import os
+
+import click
 
 
 @click.command()

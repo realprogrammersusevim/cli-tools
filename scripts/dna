@@ -6,7 +6,12 @@ def main():
     """DNA to RNA or Amino Acid sequence"""
     parser = argparse.ArgumentParser(description="DNA to RNA or Amino Acid sequence")
     parser.add_argument("-d", "--dna", help="The DNA sequence.")
-    parser.add_argument("--amino", "-a", action="store_true", help="Print amino acid sequence instead of RNA.")
+    parser.add_argument(
+        "--amino",
+        "-a",
+        action="store_true",
+        help="Print amino acid sequence instead of RNA.",
+    )
     args = parser.parse_args()
 
     dna = args.dna
