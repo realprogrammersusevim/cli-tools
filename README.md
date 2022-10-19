@@ -32,3 +32,4 @@ There are eight scripts so far.
 - `password` generates a random password
 - `rename` renames a directory of files in sequential order
 - `sinceblock` gets the number of minutes since the last Bitcoin block (must be run from a Bitcoin node)
+- `rmbadges` quickly toggles dock notification badges on macOS
