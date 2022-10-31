@@ -1,0 +1,23 @@
+#!/usr/bin/env python3
+import argparse
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("first", help="The first string to compare")
+    parser.add_argument("second", help="The second string to compare")
+    args = parser.parse_args()
+
+    diffs = 0
+    counter = 0
+    for char in args.first:
+        if char != args.second[counter]:
+            diffs += 1
+
+        counter += 1
+
+    print(f"{diffs} differences")
+
+
+if __name__ == "__main__":
+    main()
