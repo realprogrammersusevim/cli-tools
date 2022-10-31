@@ -8,6 +8,9 @@ def main():
     parser.add_argument("second", help="The second string to compare")
     args = parser.parse_args()
 
+    if len(args.first) != len(args.second):
+        print("The strings must be the same length.")
+
     diffs = 0
     counter = 0
     for char in args.first:
@@ -16,7 +19,7 @@ def main():
 
         counter += 1
 
-    print(f"{diffs} differences")
+    print(f"{diffs} difference(s)")
 
 
 if __name__ == "__main__":
