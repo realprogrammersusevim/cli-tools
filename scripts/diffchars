@@ -10,6 +10,7 @@ def main():
 
     if len(args.first) != len(args.second):
         print("The strings must be the same length.")
+        return
 
     diffs = 0
     counter = 0
