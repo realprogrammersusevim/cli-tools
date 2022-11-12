@@ -44,3 +44,5 @@ There are eight scripts so far.
 - `diffchar` finds the number of characters that don't match between two
   strings. Helpful for checking for differences in DNA.
 - `licence` prints out a specified licence
+- `craft_cleanup` removes problems with the [Craft](https://craft.do) app's
+  Markdown export
