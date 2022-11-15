@@ -2,7 +2,10 @@
 
 if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     echo "Print every Markdown file in a directory"
-    echo "Usage: printer [directory]"
+    echo "Usage: printer [directory] [option]"
+    echo "Options:"
+    echo "    -h, --help      Show this help message"
+    echo "    -c              Convert Markdown to a PDF before printing"
     exit 0
 fi
 
@@ -12,6 +15,7 @@ do
         file_name=$(basename "$file" .md)
         pandoc -s -o "$file_name".pdf "$file"
         lpr "$file_name".pdf
+        rm "$file_name".pdf
     else
         lpr "$file"
     fi
