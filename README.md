@@ -5,8 +5,8 @@
 
 ## Description
 
-The little scripts I've made to make my life just a little bit easier when I'm
-living in the command line.
+The little scripts I've written to make my life just a little bit easier when
+I'm living in the terminal
 
 ## Requirements
 
@@ -32,8 +32,8 @@ There are eight scripts so far.
   websites (only works on Mac and Linux)
 - `dna` is a bit of code I wrote for my biology class to translate a DNA string
   into the corresponding RNA and amino acids
-- `grading` was one of my very first CLI scripts to convert a percentage grade
-  into a letter grade
+- `grading` was one of my first CLI scripts to convert a percentage grade into a
+  letter grade
 - `l2n` converts a markdown letter list into a numeral list
 - `numlines` finds the biggest file in a directory
 - `password` generates a random password
@@ -46,3 +46,4 @@ There are eight scripts so far.
 - `licence` prints out a specified licence
 - `craft_cleanup` removes problems with the [Craft](https://craft.do) app's
   Markdown export
+- `ipynb2py` converts a Jupyter notebook to a Python script

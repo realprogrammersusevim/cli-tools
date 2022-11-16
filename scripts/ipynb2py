@@ -1,0 +1,31 @@
+#!python3
+
+import argparse
+import json
+
+parser = argparse.ArgumentParser(description="Convert ipynb to py")
+parser.add_argument("ipynb", help="ipynb file")
+parser.add_argument(
+    "-c", "--commment", action="store_true", help="whether to include comments"
+)
+args = parser.parse_args()
+
+with open(args.ipynb, "r") as f:
+    source = f.read()
+
+# Load the notebook object
+notebook = json.loads(source)
+
+for cell in notebook["cells"]:
+    if cell["cell_type"] == "code":
+        for line in cell["source"]:
+            print(line, end="")
+    elif cell["cell_type"] == "markdown":
+        if not args.commment:
+            for lines in cell["source"]:
+                print()
+                for line in lines.splitlines():
+                    if line == "":
+                        print()
+                    else:
+                        print(f"# {line}")
