@@ -47,3 +47,5 @@ There are eight scripts so far.
 - `craft_cleanup` removes problems with the [Craft](https://craft.do) app's
   Markdown export
 - `ipynb2py` converts a Jupyter notebook to a Python script
+- `printer` can either print the Markdown files in a directory as plain text or
+  convert them to PDFs before printing
