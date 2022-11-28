@@ -1,24 +1,23 @@
 #!python3
+import argparse
 import logging
-
-import click
 
 logging.basicConfig(level=logging.INFO)
 logging.debug("Imports finished, about to define the command options with click.")
 
-
-@click.command()
-@click.argument(
-    "grade",
-    type=float,
-    required=True,
-    nargs=1,
+parser = argparse.ArgumentParser(
+    description="Translate grades from percentage to letter."
 )
-@click.option(
+parser.add_argument("grade", type=float, help="The grade to translate.")
+parser.add_argument(
     "-c",
     "--curve",
+    store_action=True,
     help="Show whether your grade is above or below average. Pass a the highest score in the class as an argument to show how much your grade was adjusted.",
 )
+args = parser.parse_args()
+
+
 def main(grade: float, curve):
     """This script will tell you your letter grade based on your percentage grade."""
     logging.debug("Command options defined, about to run the main function.")
@@ -84,4 +83,4 @@ def main(grade: float, curve):
 
 if __name__ == "__main__":
     logging.debug("This is the main module and is not being imported.")
-    main()
+    main(args.grade, args.curve)
