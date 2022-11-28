@@ -12,7 +12,7 @@ parser.add_argument("grade", type=float, help="The grade to translate.")
 parser.add_argument(
     "-c",
     "--curve",
-    store_action=True,
+    action="store_true",
     help="Show whether your grade is above or below average. Pass a the highest score in the class as an argument to show how much your grade was adjusted.",
 )
 args = parser.parse_args()
