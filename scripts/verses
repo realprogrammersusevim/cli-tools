@@ -92,7 +92,7 @@ names = {
     "Neh": "Nehemiah",
     "Num": "Numbers",
     "Obad": "Obadiah",
-    "Philem": "Philemon",
+    # "Philem": "Philemon",
     # "Phil": "Philippians",
     "Prov": "Proverbs",
     "Ps": "Psalms",
@@ -105,13 +105,16 @@ names = {
 
 # Replace the abbreviations with the full name in each path
 # First rename the folders
-# abbr = re.compile(r"((?:\d )?\w+)")
-# for current_dir, dirs, files in os.walk("."):
-#     for dir in dirs:
-#         if re.match(abbr, dir) in names:
-#             os.rename(dir, names[dir])
-#
-#     # Now rename the folders the next level down
-#     for file in files:
-#         if file in names:
-#             os.rename(file, names[file])
+for current_dir, dirs, files in os.walk("."):
+    for dir in dirs:
+        for name in names:
+            if name in dir:
+                new_file_name = dir.replace(name, names[name])
+                os.rename(dir, new_file_name)
+
+    # Now rename the folders the next level down
+    for file in files:
+        for name in names:
+            if name in file:
+                new_file_name = file.replace(name, names[name])
+                os.rename(file, new_file_name)
