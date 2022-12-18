@@ -3,7 +3,7 @@ import argparse
 import logging
 
 logging.basicConfig(level=logging.INFO)
-logging.debug("Imports finished, about to define the command options with click.")
+logging.debug("Imports finished, about to define the command options with argparse.")
 
 parser = argparse.ArgumentParser(
     description="Translate grades from percentage to letter."

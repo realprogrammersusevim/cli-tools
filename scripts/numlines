@@ -1,14 +1,16 @@
 #!python3
 
+import argparse
 import os
 
-import click
 
-
-@click.command()
-@click.argument("directory", default=".", type=click.Path(exists=True))
-def numlines(directory):
+def numlines():
     """Get the most lines in a file in a directory."""
+    parser = argparse.ArgumentParser(description="Count the number of lines in a file")
+    parser.add_argument("directory", type=str, help="the directory to count lines in")
+    args = parser.parse_args()
+    directory = args.directory
+
     max_lines = 0
     max_file = ""
     for root, dirs, files in os.walk(directory):
