@@ -1,6 +1,6 @@
 # CLI Tools
 
-![GitHub Repo stars](https://img.shields.io/github/stars/realprogrammersusevim/cli-tools?style=for-the-badge)
+[![GitHub Repo stars](https://img.shields.io/github/stars/realprogrammersusevim/cli-tools?style=for-the-badge)](https://github.com/realprogrammersusevim/cli-tools/stargazers)
 [![GitHub license](https://img.shields.io/github/license/realprogrammersusevim/cli-tools?style=for-the-badge)](https://github.com/realprogrammersusevim/cli-tools/blob/main/LICENSE)
 
 ## Description
@@ -10,7 +10,7 @@ I'm living in the terminal
 
 ## Requirements
 
-- Bash and/or Zsh
+- Bash
 - Python 3
 
 ## Usage
