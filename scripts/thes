@@ -1,0 +1,48 @@
+#!luajit
+local argparse = require('argparse')
+
+local parser = argparse()
+parser:argument('search', 'The word to search for')
+local args = parser:parse()
+
+local search = args.search
+local current_path = string.sub(debug.getinfo(1).source, 2, string.len('/thes') * -1)
+local thesaurus_path = current_path .. 'deps/thesaurii.txt'
+
+local file = io.open(thesaurus_path, 'rb') -- r read mode and b binary mode
+if not file then
+  print('Error: file not found: ' .. thesaurus_path)
+  return nil
+end
+local content = file:read('*a') -- *a or *all reads the whole file
+file:close()
+
+local lines = {}
+for str in string.gmatch(content, '([^\n]+)') do
+  table.insert(lines, str)
+end
+
+local filtered_lines = {}
+for i = 1, #lines do
+  local line = lines[i]
+  if line:sub(1, #search) == search then -- If the line starts with the search (fast)
+    if line:match('^([^,]+),?') == search then -- If the first word is the search (getting first word is slow)
+      filtered_lines[#filtered_lines + 1] = line
+    end
+  end
+end
+
+local found_words = {}
+for i = 1, #filtered_lines do
+  local split_line = {}
+  for word in filtered_lines[i]:gmatch('([^,]+),?') do
+    split_line[#split_line + 1] = word
+  end
+  for j = 1, #split_line do
+    found_words[#found_words + 1] = split_line[j]
+  end
+end
+
+for i = 1, #found_words do
+  print(found_words[i])
+end

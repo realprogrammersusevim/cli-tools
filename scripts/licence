@@ -17,7 +17,7 @@ def main():
     )
     args = parser.parse_args()
 
-    with open(f"{os.path.dirname(__file__)}/licences.yaml") as f:
+    with open(f"{os.path.dirname(__file__)}/deps/licences.yaml") as f:
         licences = yaml.full_load(f)
 
     print(licences[args.licence])
