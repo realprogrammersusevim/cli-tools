@@ -53,3 +53,4 @@ There are eight scripts so far.
   [BibleGateway-to-Markdown](https://github.com/jgclark/BibleGateway-to-Markdown)
   to separate text files
 - `quop` a tiny script to open up the QUOP game in a web browser
+- `thes` gets synonyms of the word from a thesaurus
