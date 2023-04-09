@@ -13,7 +13,7 @@ parser.add_argument(
     "-c",
     "--curve",
     action="store_true",
-    help="Show whether your grade is above or below average. Pass a the highest score in the class as an argument to show how much your grade was adjusted.",
+    help="Show whether your grade is above or below average.",
 )
 args = parser.parse_args()
 
@@ -70,13 +70,12 @@ def main(grade: float, curve):
             logging.debug(f"The amount your grade was adjusted is: {adjustment_amount}")
 
             if grade == 100.0:
-                print(
-                    "You had the highest grade in the class. As such, you were the one who set the curve and we are unable to calculate how much your grade was adjusted."
-                )
+                print("You had the highest grade in the class.")
             else:
-                print(
-                    f"Your grade was adjusted upwards by {round((adjustment_amount / original_grade) * 100, ndigits=2)}%."
+                adjustment_amount = round(
+                    (adjustment_amount / original_grade) * 100, ndigits=2
                 )
+                print(f"Your grade was adjusted upwards by {adjustment_amount}%.")
 
     logging.debug("Main function finished, about to exit.")
 
