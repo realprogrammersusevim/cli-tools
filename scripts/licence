@@ -3,24 +3,21 @@ import argparse
 import json
 import os
 
+parser = argparse.ArgumentParser(
+    prog="licence",
+    description="Print out a license from a few options",
+)
+parser.add_argument(
+    "licence",
+    default="mit",
+    nargs="?",
+    type=str,
+    choices=["apache", "bsd3", "bsd2", "gpl2", "gpl3", "mit", "mozilla2", "epl2"],
+    help="The licence to use",
+)
+args = parser.parse_args()
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "licence",
-        default="mit",
-        nargs="?",
-        type=str,
-        choices=["apache", "bsd3", "bsd2", "gpl2", "gpl3", "mit", "mozilla2", "epl2"],
-        help="The licence to use",
-    )
-    args = parser.parse_args()
+with open(f"{os.path.dirname(__file__)}/deps/licences.json") as f:
+    licences = json.load(f)
 
-    with open(f"{os.path.dirname(__file__)}/deps/licences.json") as f:
-        licences = json.load(f)
-
-    print(licences[args.licence])
-
-
-if __name__ == "__main__":
-    main()
+print(licences[args.licence])

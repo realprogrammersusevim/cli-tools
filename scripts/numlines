@@ -3,30 +3,23 @@
 import argparse
 import os
 
+parser = argparse.ArgumentParser(description="Count the number of lines in a file")
+parser.add_argument("directory", type=str, help="the directory to count lines in")
+args = parser.parse_args()
+directory = args.directory
 
-def numlines():
-    """Get the most lines in a file in a directory."""
-    parser = argparse.ArgumentParser(description="Count the number of lines in a file")
-    parser.add_argument("directory", type=str, help="the directory to count lines in")
-    args = parser.parse_args()
-    directory = args.directory
+max_lines = 0
+max_file = ""
+for root, dirs, files in os.walk(directory):
+    for file in files:
+        file_path = os.path.join(root, file)
+        try:
+            with open(file_path) as f:
+                lines = f.read().count("\n")
 
-    max_lines = 0
-    max_file = ""
-    for root, dirs, files in os.walk(directory):
-        for file in files:
-            file_path = os.path.join(root, file)
-            try:
-                with open(file_path) as f:
-                    lines = f.read().count("\n")
-
-                if lines > max_lines:
-                    max_lines = lines
-                    max_file = file_path
-            except:
-                pass
-    print(f"{max_file} has the high score with {max_lines} lines.")
-
-
-if __name__ == "__main__":
-    numlines()
+            if lines > max_lines:
+                max_lines = lines
+                max_file = file_path
+        except:
+            pass
+print(f"{max_file} has the high score with {max_lines} lines.")

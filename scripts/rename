@@ -6,26 +6,20 @@ parser = argparse.ArgumentParser(description="Rename files in a directory")
 parser.add_argument("dir", type=str, help="Directory to rename files in")
 args = parser.parse_args()
 
+counter = 0
 
-def main(dir):
-    counter = 0
+# Rename files to numbers
+for file in os.listdir(args.dir):
+    counter += 1
+    file_extension = file.split(".")[-1]
+    new_name = f"{str(counter)}.{file_extension}"
+    os.rename(os.path.join(args.dir, file), os.path.join(args.dir, new_name))
 
-    # Rename files to numbers
-    for file in os.listdir(dir):
-        counter += 1
-        file_extension = file.split(".")[-1]
-        new_name = f"{str(counter)}.{file_extension}"
-        os.rename(os.path.join(dir, file), os.path.join(dir, new_name))
+# Get the length of the longest file name
+max_length = len(max(os.listdir(args.dir), key=len)) + 1
 
-    # Get the length of the longest file name
-    max_length = len(max(os.listdir(dir), key=len)) + 1
-
-    # Rename files with leading zeros so they are all the same length
-    for file in os.listdir(dir):
-        file_extension = file.split(".")[-1]
-        new_name = f"{file.zfill(max_length)}.{file_extension}"
-        os.rename(os.path.join(dir, file), os.path.join(dir, new_name))
-
-
-if __name__ == "__main__":
-    main(args.dir)
+# Rename files with leading zeros so they are all the same length
+for file in os.listdir(args.dir):
+    file_extension = file.split(".")[-1]
+    new_name = f"{file.zfill(max_length)}.{file_extension}"
+    os.rename(os.path.join(args.dir, file), os.path.join(args.dir, new_name))

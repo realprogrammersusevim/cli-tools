@@ -1,17 +1,12 @@
 #!/usr/bin/env python3
 import argparse
 
+parser = argparse.ArgumentParser()
+parser.add_argument("first", help="The first string to compare")
+parser.add_argument("second", help="The second string to compare")
+args = parser.parse_args()
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("first", help="The first string to compare")
-    parser.add_argument("second", help="The second string to compare")
-    args = parser.parse_args()
-
-    if len(args.first) != len(args.second):
-        print("The strings must be the same length.")
-        return
-
+if len(args.first) == len(args.second):
     diffs = 0
     counter = 0
     for char in args.first:
@@ -21,7 +16,5 @@ def main():
         counter += 1
 
     print(f"{diffs} difference(s)")
-
-
-if __name__ == "__main__":
-    main()
+else:
+    print("The strings must be the same length.")

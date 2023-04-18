@@ -2,39 +2,32 @@
 import argparse
 import unicodedata
 
+# Convert every character in file to ASCII
+parser = argparse.ArgumentParser(description="Converts a file to ASCII")
+parser.add_argument("filename", type=argparse.FileType("r"))
+parser.add_argument("-i", "--ignore", action="store_true", help="Ignore characters")
 
-def main():
-    # Convert every character in file to ASCII
-    parser = argparse.ArgumentParser()
-    parser = argparse.ArgumentParser(description="Converts a file to ASCII")
-    parser.add_argument("filename", type=argparse.FileType("r"))
-    parser.add_argument("-i", "--ignore", action="store_true", help="Ignore characters")
+args = parser.parse_args()
+filename = args.filename
+ignore = args.ignore
 
-    args = parser.parse_args()
-    filename = args.filename
-    ignore = args.ignore
+new_file = ""
+with open(filename.name, "r") as f:
+    for line in f:
+        for char in line:
+            if ignore:
+                new_file += (
+                    unicodedata.normalize("NFKD", char)
+                    .encode("ascii", "replace")
+                    .decode()
+                )
+            else:
+                new_file += (
+                    unicodedata.normalize("NFKD", char)
+                    .encode("ascii", "ignore")
+                    .decode("ascii")
+                )
 
-    new_file = ""
-    with open(filename.name, "r") as f:
-        for line in f:
-            for char in line:
-                if ignore:
-                    new_file += (
-                        unicodedata.normalize("NFKD", char)
-                        .encode("ascii", "replace")
-                        .decode()
-                    )
-                else:
-                    new_file += (
-                        unicodedata.normalize("NFKD", char)
-                        .encode("ascii", "ignore")
-                        .decode("ascii")
-                    )
-
-    # Write new file
-    with open(filename.name, "w") as f:
-        f.write(new_file)
-
-
-if __name__ == "__main__":
-    main()
+# Write new file
+with open(filename.name, "w") as f:
+    f.write(new_file)
