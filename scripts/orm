@@ -1,0 +1,27 @@
+#!/bin/sh
+
+if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    cat << EOF
+Calculate your One Rep Maximum
+
+Usage: $0 <WEIGHT> <REPS>
+
+Arguments:
+  <WEIGHT>  The weight lifted
+  <REPS>    The number of repetitions performed
+
+Options:
+  -h, --help     Show this help message
+  -V, --version  Show version information
+EOF
+elif [ "$1" = "-V" ] || [ "$1" = "--version" ]; then
+    echo "$0 1.0.0"
+else
+    WEIGHT="$1"
+    REPS="$2"
+
+    RESULT=$(echo "$WEIGHT * (1 + ($REPS / 30))" | bc -l)
+
+    printf %.f "$RESULT"
+    printf "\n"
+fi
