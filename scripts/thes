@@ -1,4 +1,4 @@
-#!luajit
+#!/usr/bin/env luajit
 local argparse = require('argparse')
 
 local parser = argparse()

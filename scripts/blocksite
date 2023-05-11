@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-if [ $# -eq 0 ] || [ $1 == "-h" ] || [ $1 == "--help" ]; then
+if [ $# -eq 0 ] || [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
     echo "Usage: blocksite <site>"
     exit 1
 else
-  echo "0.0.0.0         $1" >> /etc/hosts
+    echo "0.0.0.0         $1" >> /etc/hosts
 fi
