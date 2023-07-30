@@ -28,6 +28,7 @@ If you help with a tool just run it with a `-h` flag
   just like ASCII but cause all sorts of problems.
 - `blocksite` adds a URL to the /etc/hosts file to stop those time sucking
   websites (only works on Mac and Linux)
+- `check_git` prints all directories that have uncommitted Git changes.
 - `craft_cleanup` removes problems with the [Craft](https://craft.do) app's
   Markdown export
 - `diffchar` finds the number of characters that don't match between two
