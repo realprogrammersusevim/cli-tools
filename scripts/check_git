@@ -3,28 +3,34 @@
 USAGE="Usage: $(basename "$0") [-d directory]"
 DESCRIPTION="Print which directories have uncommitted git changes"
 
+check_git () {
+    cd "$1" || exit 1
+    for dir in $(fd -t d -d 1); do
+        cd "$dir" || continue
+
+        # First check if we're in a Git repo
+        if git rev-parse --show-toplevel &>/dev/null; then
+            # Now check if there are any uncommitted changes
+            if git diff-index --quiet HEAD -- &> /dev/null; then
+                :
+            else
+                # Looks like there are, print the directory
+                echo "$dir"
+            fi
+        fi
+        cd ..
+    done
+}
+
+CHECKED=false
+
 while getopts ':d:h' opt; do
     case "$opt" in
         d)
-            cd "$OPTARG" || exit
-            for dir in $(fd -t d -d 1); do
-                cd "$dir" || continue
-
-                # First check if we're in a Git repo
-                if git rev-parse --show-toplevel &>/dev/null; then
-                    # Now check if there are any uncommitted changes
-                    if git diff-index --quiet HEAD -- &> /dev/null; then
-                        :
-                    else
-                        # Looks like there are, print the directory
-                        echo "$dir"
-                    fi
-                fi
-                cd ..
-            done
+            CHECKED=true
+            check_git "$OPTARG"
             ;;
-        h)
-            printf "%s\n\n%s\n" "$DESCRIPTION" "$USAGE"
+        h) printf "%s\n\n%s\n" "$DESCRIPTION" "$USAGE"
             ;;
         :) printf "option requires an argument\n%s\n" "$USAGE"
             ;;
@@ -32,3 +38,8 @@ while getopts ':d:h' opt; do
             ;;
     esac
 done
+
+# This is a hacky way of having default behaviour if nothing is passed
+if [ $CHECKED = false ]; then
+    check_git "."
+fi
