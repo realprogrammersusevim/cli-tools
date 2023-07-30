@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+USAGE="Usage: $(basename "$0") [-d directory]"
+DESCRIPTION="Print which directories have uncommitted git changes"
+
+while getopts ':d:h' opt; do
+    case "$opt" in
+        d)
+            cd "$OPTARG" || exit
+            for dir in $(fd -t d -d 1); do
+                cd "$dir" || continue
+
+                # First check if we're in a Git repo
+                if git rev-parse --show-toplevel &>/dev/null; then
+                    # Now check if there are any uncommitted changes
+                    if git diff-index --quiet HEAD -- &> /dev/null; then
+                        :
+                    else
+                        # Looks like there are, print the directory
+                        echo "$dir"
+                    fi
+                fi
+                cd ..
+            done
+            ;;
+        h)
+            printf "%s\n\n%s\n" "$DESCRIPTION" "$USAGE"
+            ;;
+        :) printf "option requires an argument\n%s\n" "$USAGE"
+            ;;
+        ?) printf "Invalid command line option\n%s\n" "$USAGE"
+            ;;
+    esac
+done
