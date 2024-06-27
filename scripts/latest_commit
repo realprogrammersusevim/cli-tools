@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+import glob
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "directory", help="The directory with the subdirectories to loop through"
+)
+args = parser.parse_args()
+
+cur_dir = os.curdir
+
+last = []
+
+# Suppress any git output
+devnull = open(os.devnull, "w")
+old_stdout = sys.stdout
+old_stderr = sys.stderr
+
+for dir in glob.glob(args.directory + "/*/"):
+    os.chdir(dir)
+    try:
+        time = os.popen("git log -1 --format=%ct 2>/dev/null").read()
+        last.append((int(time), dir))
+    except:
+        pass
+
+sys.stdout = old_stdout
+sys.stderr = old_stderr
+
+os.chdir(cur_dir)
+
+latest = sorted(
+    last, reverse=True
+)  # Python by default compares tuples by the first item
+for i in latest:
+    print(i[1])
