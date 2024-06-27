@@ -54,3 +54,5 @@ If you help with a tool just run it with a `-h` flag
 - `verses` converts the output of
   [BibleGateway-to-Markdown](https://github.com/jgclark/BibleGateway-to-Markdown)
   to separate text files
+- `latest_commit` shows the subdirectories in a directory sorted by the date of
+  the latest git commit
