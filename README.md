@@ -48,3 +48,4 @@ If you help with a tool just run it with a `-h` flag
 - `thes` gets synonyms of the word from a thesaurus
 - `latest_commit` shows the subdirectories in a directory sorted by the date of
   the latest git commit
+- `gp-control` turns the GlobalProtect VPN on and off with launchctl on macOS.

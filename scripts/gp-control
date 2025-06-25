@@ -1,0 +1,102 @@
+#!/bin/bash
+
+# ==============================================================================
+# GlobalProtect Control Script for macOS
+#
+# Description:
+# This script starts or stops the GlobalProtect VPN client and its
+# associated background services (launch agents and daemons). The app
+# itself doesn't offer a "Quit" option, so this script uses `launchctl`
+# to load or unload the services, effectively enabling or disabling the app.
+#
+# Note:
+# The 'stop' command requires sudo because it unloads a system-level
+# Launch Daemon. You will be prompted for your Mac's password.
+#
+# ==============================================================================
+
+# --- Configuration ---
+# These are the standard service files for GlobalProtect.
+# No changes should be needed unless your installation is highly customized.
+
+# User-specific agent (handles the UI menu bar icon, etc.)
+LAUNCH_AGENT_PLIST="/Library/LaunchAgents/com.paloaltonetworks.gp.pangpa.plist"
+
+# System-wide daemon (handles the core VPN service)
+LAUNCH_DAEMON_PLIST="/Library/LaunchDaemons/com.paloaltonetworks.gp.pangpsd.plist"
+
+# --- Functions ---
+
+# Function to check if a file exists
+check_file_exists() {
+  if [ ! -f "$1" ]; then
+    echo "Error: Service file not found at $1"
+    echo "GlobalProtect may not be installed or the path has changed."
+    exit 1
+  fi
+}
+
+# --- Main Script Logic ---
+
+# Check for the correct number of arguments
+if [ "$#" -ne 1 ]; then
+  echo "Usage: $0 {start|stop}"
+  exit 1
+fi
+
+# Process the command-line argument
+case "$1" in
+stop)
+  echo "Stopping GlobalProtect services..."
+
+  # Check if the service files exist before trying to unload
+  check_file_exists "$LAUNCH_AGENT_PLIST"
+  check_file_exists "$LAUNCH_DAEMON_PLIST"
+
+  # Unload the user agent (doesn't require sudo)
+  # The 'gui/$(id -u)' domain is the modern way to target the logged-in user's GUI session.
+  echo "Unloading user agent..."
+  launchctl unload -w "$LAUNCH_AGENT_PLIST" 2>/dev/null
+
+  # Unload the system daemon (requires sudo)
+  echo "Unloading system daemon (sudo password may be required)..."
+  sudo launchctl unload -w "$LAUNCH_DAEMON_PLIST" 2>/dev/null
+
+  # As a final measure, kill the main application process if it's running
+  if pgrep -f "GlobalProtect" >/dev/null; then
+    echo "Forcibly terminating GlobalProtect application process..."
+    killall "GlobalProtect"
+  fi
+
+  echo "GlobalProtect has been stopped."
+  ;;
+
+start)
+  echo "Starting GlobalProtect services..."
+
+  # Check if the service files exist before trying to load
+  check_file_exists "$LAUNCH_AGENT_PLIST"
+  check_file_exists "$LAUNCH_DAEMON_PLIST"
+
+  # Load the system daemon (requires sudo)
+  echo "Loading system daemon (sudo password may be required)..."
+  sudo launchctl load -w "$LAUNCH_DAEMON_PLIST" 2>/dev/null
+
+  # Load the user agent
+  echo "Loading user agent..."
+  launchctl load -w "$LAUNCH_AGENT_PLIST" 2>/dev/null
+
+  # After loading the services, you can open the app if you wish
+  # open /Applications/GlobalProtect.app
+
+  echo "GlobalProtect has been started."
+  ;;
+
+*)
+  echo "Invalid argument: '$1'"
+  echo "Usage: $0 {start|stop}"
+  exit 1
+  ;;
+esac
+
+exit 0
