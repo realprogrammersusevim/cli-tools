@@ -1,5 +1,0 @@
-#!python3
-
-import webbrowser
-
-webbrowser.open("https://foddy.net/Athletics.html")
