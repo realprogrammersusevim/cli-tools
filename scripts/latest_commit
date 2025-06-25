@@ -11,8 +11,6 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-cur_dir = os.curdir
-
 last = []
 
 # Suppress any git output
@@ -27,11 +25,10 @@ for dir in glob.glob(args.directory + "/*/"):
         last.append((int(time), dir))
     except:
         pass
+    os.chdir("../")
 
 sys.stdout = old_stdout
 sys.stderr = old_stderr
-
-os.chdir(cur_dir)
 
 latest = sorted(
     last, reverse=True
