@@ -1,37 +1,80 @@
 #!/usr/bin/env python3
 
-import os
-import sys
-import glob
 import argparse
+import asyncio
+import glob
+from typing import List, Optional, Tuple
 
-parser = argparse.ArgumentParser()
-parser.add_argument(
-    "directory", help="The directory with the subdirectories to loop through"
-)
-args = parser.parse_args()
 
-last = []
-
-# Suppress any git output
-devnull = open(os.devnull, "w")
-old_stdout = sys.stdout
-old_stderr = sys.stderr
-
-for dir in glob.glob(args.directory + "/*/"):
-    os.chdir(dir)
+async def _git_last_commit_epoch(path: str) -> Optional[Tuple[int, str, bool]]:
     try:
-        time = os.popen("git log -1 --format=%ct 2>/dev/null").read()
-        last.append((int(time), dir))
-    except:
-        pass
-    os.chdir("../")
+        proc = await asyncio.create_subprocess_exec(
+            "git",
+            "log",
+            "-1",
+            "--format=%ct",
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.DEVNULL,
+            cwd=path,
+        )
+        stdout, _ = await proc.communicate()
+        if proc.returncode != 0:
+            return None
+        s = stdout.decode().strip()
+        if not s:
+            return None
+        # Check for uncommitted changes (includes untracked files)
+        status_proc = await asyncio.create_subprocess_exec(
+            "git",
+            "status",
+            "--porcelain",
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.DEVNULL,
+            cwd=path,
+        )
+        status_out, _ = await status_proc.communicate()
+        dirty = bool(status_out.decode().strip()) if status_proc.returncode == 0 else False
+        return (int(s), path, dirty)
+    except Exception:
+        return None
 
-sys.stdout = old_stdout
-sys.stderr = old_stderr
 
-latest = sorted(
-    last, reverse=True
-)  # Python by default compares tuples by the first item
-for i in latest:
-    print(i[1])
+async def _bounded_git_query(sem: asyncio.Semaphore, path: str):
+    async with sem:
+        return await _git_last_commit_epoch(path)
+
+
+async def main_async(directory: str) -> None:
+    # Find immediate subdirectories (trailing slash like original behavior)
+    subdirs: List[str] = glob.glob(directory.rstrip("/") + "/*/")
+
+    # Run git queries concurrently with a sane limit
+    sem = asyncio.Semaphore(64)
+    tasks = [asyncio.create_task(_bounded_git_query(sem, d)) for d in subdirs]
+    results = await asyncio.gather(*tasks)
+
+    last = [r for r in results if r is not None]
+    latest = sorted(last, reverse=True)  # sorts by timestamp then path
+
+    for _, path, dirty in latest:
+        if dirty and path.endswith('/'):
+            # Insert asterisk before trailing slash to preserve format
+            decorated = path[:-1] + '*'
+        elif dirty:
+            decorated = path + '*'
+        else:
+            decorated = path
+        print(decorated)
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "directory", help="The directory with the subdirectories to loop through"
+    )
+    args = parser.parse_args()
+    asyncio.run(main_async(args.directory))
+
+
+if __name__ == "__main__":
+    main()
