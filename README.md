@@ -21,7 +21,7 @@ Add the directory to your path in your shell config file.
 export PATH=$PATH:"/path/to/the/script/dir/"
 ```
 
-If you help with a tool just run it with a `-h` flag
+If you need help with a tool just run it with a `-h` flag
 
 - `ascii` is a Python script to convert a unicode text file to plain ASCII.
   Especially useful for those annoying little unicode quotation marks that look
@@ -29,14 +29,12 @@ If you help with a tool just run it with a `-h` flag
 - `blocksite` adds a URL to the /etc/hosts file to stop those time sucking
   websites (only works on Mac and Linux)
 - `check_git` prints all directories that have uncommitted Git changes.
-- `diffchar` finds the number of characters that don't match between two
+- `diffchars` finds the number of characters that don't match between two
   strings. Helpful for checking for differences in DNA.
-- `grading` was one of my first CLI scripts to convert a percentage grade into a
-  letter grade
 - `ipynb2py` converts a Jupyter notebook to a Python script
 - `l2n` converts a markdown letter list into a numeral list
 - `licence` prints out a specified licence
-- `numlines` finds the biggest file in a directory
+- `numlines` finds the file with the most lines in a directory
 - `orm` calculates your one rep max for weightlifting
 - `password` generates a random password
 - `printer` can either print the Markdown files in a directory as plain text or
