@@ -70,7 +70,10 @@ async def main_async(directory: str) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "directory", help="The directory with the subdirectories to loop through"
+        "directory",
+        nargs="?",
+        default=".",
+        help="The directory with the subdirectories to loop through (default: current directory)",
     )
     args = parser.parse_args()
     asyncio.run(main_async(args.directory))
