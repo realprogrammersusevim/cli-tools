@@ -10,7 +10,7 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-with open(args.ipynb, "r") as f:
+with open(args.ipynb) as f:
     source = f.read()
 
 # Load the notebook object
@@ -20,12 +20,11 @@ for cell in notebook["cells"]:
     if cell["cell_type"] == "code":
         for line in cell["source"]:
             print(line, end="")
-    elif cell["cell_type"] == "markdown":
-        if not args.commment:
-            for lines in cell["source"]:
-                print()
-                for line in lines.splitlines():
-                    if line == "":
-                        print()
-                    else:
-                        print(f"# {line}")
+    elif cell["cell_type"] == "markdown" and not args.commment:
+        for lines in cell["source"]:
+            print()
+            for line in lines.splitlines():
+                if line == "":
+                    print()
+                else:
+                    print(f"# {line}")

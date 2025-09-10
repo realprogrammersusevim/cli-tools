@@ -10,7 +10,7 @@ directory = args.directory
 
 max_lines = 0
 max_file = ""
-for root, dirs, files in os.walk(directory):
+for root, _dirs, files in os.walk(directory):
     for file in files:
         file_path = os.path.join(root, file)
         try:
