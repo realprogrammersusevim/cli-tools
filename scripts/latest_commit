@@ -3,10 +3,10 @@
 import argparse
 import asyncio
 import glob
-from typing import List, Optional, Tuple
+from typing import Optional
 
 
-async def _git_last_commit_epoch(path: str) -> Optional[Tuple[int, str, bool]]:
+async def _git_last_commit_epoch(path: str) -> Optional[tuple[int, str, bool]]:
     try:
         proc = await asyncio.create_subprocess_exec(
             "git",
@@ -33,7 +33,9 @@ async def _git_last_commit_epoch(path: str) -> Optional[Tuple[int, str, bool]]:
             cwd=path,
         )
         status_out, _ = await status_proc.communicate()
-        dirty = bool(status_out.decode().strip()) if status_proc.returncode == 0 else False
+        dirty = (
+            bool(status_out.decode().strip()) if status_proc.returncode == 0 else False
+        )
         return (int(s), path, dirty)
     except Exception:
         return None
@@ -46,7 +48,7 @@ async def _bounded_git_query(sem: asyncio.Semaphore, path: str):
 
 async def main_async(directory: str) -> None:
     # Find immediate subdirectories (trailing slash like original behavior)
-    subdirs: List[str] = glob.glob(directory.rstrip("/") + "/*/")
+    subdirs: list[str] = glob.glob(directory.rstrip("/") + "/*/")
 
     # Run git queries concurrently with a sane limit
     sem = asyncio.Semaphore(64)
@@ -57,11 +59,11 @@ async def main_async(directory: str) -> None:
     latest = sorted(last, reverse=True)  # sorts by timestamp then path
 
     for _, path, dirty in latest:
-        if dirty and path.endswith('/'):
+        if dirty and path.endswith("/"):
             # Insert asterisk before trailing slash to preserve format
-            decorated = path[:-1] + '*'
+            decorated = path[:-1] + "*"
         elif dirty:
-            decorated = path + '*'
+            decorated = path + "*"
         else:
             decorated = path
         print(decorated)
