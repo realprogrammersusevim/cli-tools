@@ -49,3 +49,5 @@ If you help with a tool just run it with a `-h` flag
 - `latest_commit` shows the subdirectories in a directory sorted by the date of
   the latest git commit
 - `gp-control` turns the GlobalProtect VPN on and off with launchctl on macOS.
+- `imessages_export` exports messages from the macOS Messages (iMessage)
+  database for a given phone number, printing a simple conversation view.
