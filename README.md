@@ -49,3 +49,6 @@ If you need help with a tool just run it with a `-h` flag
 - `gp-control` turns the GlobalProtect VPN on and off with launchctl on macOS.
 - `imessages_export` exports messages from the macOS Messages (iMessage)
   database for a given phone number, printing a simple conversation view.
+- `llmview` renders markdown to HTML and opens it in Quick Look (macOS) or the
+  default browser. Pipe markdown in via stdin, or use `--last` to view the most
+  recent response from [`llm`](https://llm.datasette.io/)'s logs database.
