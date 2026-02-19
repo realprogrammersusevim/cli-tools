@@ -1,0 +1,198 @@
+#!/usr/bin/env python3
+"""
+timesuck.py — Toggle blocking of common time-wasting websites via /etc/hosts.
+
+Usage:
+    sudo python3 timesuck.py          # toggle (block if unblocked, unblock if blocked)
+    sudo python3 timesuck.py block    # force block
+    sudo python3 timesuck.py unblock  # force unblock
+    sudo python3 timesuck.py status   # show current state
+"""
+
+import argparse
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+HOSTS_FILE = Path("/etc/hosts")
+MARKER_START = "# --- TIMESUCK BLOCK START ---"
+MARKER_END = "# --- TIMESUCK BLOCK END ---"
+REDIRECT = "127.0.0.1"
+
+BLOCKED_SITES = [
+    # Social media
+    "facebook.com",
+    "www.facebook.com",
+    "twitter.com",
+    "www.twitter.com",
+    "x.com",
+    "www.x.com",
+    "instagram.com",
+    "www.instagram.com",
+    "tiktok.com",
+    "www.tiktok.com",
+    "snapchat.com",
+    "www.snapchat.com",
+    "pinterest.com",
+    "www.pinterest.com",
+    "linkedin.com",
+    "www.linkedin.com",
+    "threads.net",
+    "www.threads.net",
+    # Video / streaming
+    "youtube.com",
+    "www.youtube.com",
+    "m.youtube.com",
+    "twitch.tv",
+    "www.twitch.tv",
+    "netflix.com",
+    "www.netflix.com",
+    "disneyplus.com",
+    "www.disneyplus.com",
+    "hulu.com",
+    "www.hulu.com",
+    # News & forums
+    "reddit.com",
+    "www.reddit.com",
+    "old.reddit.com",
+    "news.ycombinator.com",
+    "digg.com",
+    "www.digg.com",
+    # Misc time sinks
+    "buzzfeed.com",
+    "www.buzzfeed.com",
+    "9gag.com",
+    "www.9gag.com",
+    "imgur.com",
+    "www.imgur.com",
+    "artificialanalysis.ai",
+]
+
+
+def flush_dns():
+    """Flush the macOS DNS cache so changes take effect immediately."""
+    try:
+        subprocess.run(["dscacheutil", "-flushcache"], check=True, capture_output=True)
+        subprocess.run(
+            ["killall", "-HUP", "mDNSResponder"], check=True, capture_output=True
+        )
+    except subprocess.CalledProcessError:
+        print("Warning: could not flush DNS cache (non-fatal).")
+
+
+def read_hosts() -> str:
+    return HOSTS_FILE.read_text()
+
+
+def is_blocked(content: str) -> bool:
+    return MARKER_START in content
+
+
+def build_block_section() -> str:
+    lines = [MARKER_START]
+    for site in BLOCKED_SITES:
+        lines.append(f"{REDIRECT}  {site}")
+    lines.append(MARKER_END)
+    return "\n".join(lines)
+
+
+def apply_block(content: str) -> str:
+    """Add the block section to the end of hosts content (clean copy without old block)."""
+    content = remove_block(content)
+    block = build_block_section()
+    return content.rstrip("\n") + "\n\n" + block + "\n"
+
+
+def remove_block(content: str) -> str:
+    """Strip out the block section entirely."""
+    lines = content.splitlines(keepends=True)
+    result = []
+    inside = False
+    for line in lines:
+        if line.strip() == MARKER_START:
+            inside = True
+            continue
+        if line.strip() == MARKER_END:
+            inside = False
+            continue
+        if not inside:
+            result.append(line)
+    # Drop trailing blank lines left behind, then restore one newline at end
+    joined = "".join(result).rstrip("\n") + "\n"
+    return joined
+
+
+def write_hosts(content: str):
+    HOSTS_FILE.write_text(content)
+
+
+def cmd_status():
+    content = read_hosts()
+    state = "BLOCKED" if is_blocked(content) else "unblocked"
+    print(f"Status: {state}")
+    if is_blocked(content):
+        print(f"  {len(BLOCKED_SITES)} sites are currently blocked.")
+
+
+def cmd_block():
+    content = read_hosts()
+    if is_blocked(content):
+        print("Already blocked. Nothing to do.")
+        return
+    write_hosts(apply_block(content))
+    flush_dns()
+    print(f"Blocked {len(BLOCKED_SITES)} sites. Time to focus.")
+
+
+def cmd_unblock():
+    content = read_hosts()
+    if not is_blocked(content):
+        print("Already unblocked. Nothing to do.")
+        return
+    write_hosts(remove_block(content))
+    flush_dns()
+    print("Unblocked. Welcome back to the internet (use wisely).")
+
+
+def cmd_toggle():
+    content = read_hosts()
+    if is_blocked(content):
+        cmd_unblock()
+    else:
+        cmd_block()
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Toggle blocking of common time-wasting websites via /etc/hosts."
+    )
+    parser.add_argument(
+        "command",
+        nargs="?",
+        default="toggle",
+        choices=["toggle", "block", "unblock", "status"],
+        help="Action to perform (default: toggle)",
+    )
+    args = parser.parse_args()
+
+    if HOSTS_FILE.stat().st_uid != 0 or not HOSTS_FILE.is_file():
+        print(f"Error: {HOSTS_FILE} looks wrong. Aborting.")
+        sys.exit(1)
+
+    if os.geteuid() != 0:
+        print("Error: this script must be run with sudo.")
+        sys.exit(1)
+
+    dispatch = {
+        "toggle": cmd_toggle,
+        "block": cmd_block,
+        "unblock": cmd_unblock,
+        "status": cmd_status,
+    }
+
+    dispatch[args.command]()
+
+
+if __name__ == "__main__":
+    main()

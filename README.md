@@ -52,3 +52,6 @@ If you need help with a tool just run it with a `-h` flag
 - `llmview` renders markdown to HTML and opens it in Quick Look (macOS) or the
   default browser. Pipe markdown in via stdin, or use `--last` to view the most
   recent response from [`llm`](https://llm.datasette.io/)'s logs database.
+- `timesuck` toggles blocking of common time-wasting websites (social media,
+  video streaming, news/forums) via `/etc/hosts`. Supports `block`, `unblock`,
+  `status`, and `toggle` (default) subcommands. Must be run with `sudo`.
