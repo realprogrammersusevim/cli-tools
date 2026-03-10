@@ -1,0 +1,40 @@
+#!/bin/bash
+
+packages=$(brew leaves --installed-on-request)
+total=$(echo "$packages" | wc -l | tr -d ' ')
+count=0
+
+for pkg in $packages; do
+  count=$((count + 1))
+  clear
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo "  Package $count / $total: $pkg"
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  brew info "$pkg" | head -20
+  echo ""
+  read -rp "  [d] uninstall  [s] skip  [q] quit  > " choice
+
+  case "$choice" in
+    d|D)
+      echo "  Uninstalling $pkg..."
+      brew uninstall "$pkg"
+      ;;
+    q|Q)
+      echo "Quitting. Run 'brew autoremove && brew cleanup' to clean up orphaned deps."
+      exit 0
+      ;;
+    *)
+      echo "  Skipping $pkg."
+      ;;
+  esac
+
+  sleep 0.3
+done
+
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "  Done! Running autoremove and cleanup..."
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+brew autoremove
+brew cleanup
+echo "  All done."
